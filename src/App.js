@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import NewTask from "./components/NewTask/NewTask";
 import Tasks from './components/Tasks/Tasks';
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://view-movie-list-14-httpreq-default-rtdb.firebaseio.com/tasks.json')
+      const response = await fetch('https://task-tracker-15-http-default-rtdb.firebaseio.com/tasks.json')
       if(!response.ok) {
         throw new Error('Request failed')
       }
@@ -33,9 +34,14 @@ function App() {
     fetchTasks();
   }, []);
 
+  const addTaskHandler = (task) => {
+    setTasks(prevTasks => prevTasks.concat(task));
+  }
+
 
   return (
     <React.Fragment>
+    <NewTask onAddTask={addTaskHandler} />
       <Tasks
         items={tasks} 
         error={error}

@@ -8,14 +8,11 @@ const Tasks = (props) => {
 	if(props.items.length > 0) {
 		taskList = (
 			<ul>
-				{
-					props.items.map((task) => (
+				{props.items.map((task) => (
 						<TaskItem key={task.id}>{task.text}</TaskItem>
-					))
-				}
+				))}
 			</ul>
-		)
-		
+		);	
 	}
 
 	let content = taskList;
