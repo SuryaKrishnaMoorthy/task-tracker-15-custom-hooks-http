@@ -1,38 +1,26 @@
-import { useState } from 'react';
+import useHttp from '../../hooks/use-http';
 import TaskForm from './TaskForm';
 import Section from '../UI/Section';
 
 const NewTask = (props) => {
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState(null);
+	
+	const {isLoading, error, sendRequest: sendTaskRequest} = useHttp();
+	const createTask = (taskText, taskData) => {
+		const generateId = taskData.name;
+		const createdTask = {id: generateId, text: taskText};
 
-	const enterTaskHandler = async (taskText) => {
-		setIsLoading(true);
-		setError(null);
+		props.onAddTask(createdTask);
+	}
 
-		try {
-			const response = await fetch('https://task-tracker-15-http-default-rtdb.firebaseio.com/tasks.json',{
-				method: 'POST',
-				body: JSON.stringify({ text: taskText }),
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
-
-			if(!response.ok) {
-				throw new Error('Request failed');
+	const enterTaskHandler = async (taskText) => {				
+		sendTaskRequest({
+			url: 'https://task-tracker-15-http-default-rtdb.firebaseio.com/tasks.json',
+			method: 'POST',
+			body: { text: taskText },
+			headers: {
+				'Content-Type': 'application/json'
 			}
-
-			const data = await response.json();
-			const generateId = data.name;
-			const createdTask = {id: generateId, text: taskText};
-
-			props.onAddTask(createdTask);
-			
-		} catch (err) {
-			setError(err.message || 'Something went wrong');
-		}
-			setIsLoading(false);
+		}, createTask.bind(null, taskText));
 	}
 
 	return (
