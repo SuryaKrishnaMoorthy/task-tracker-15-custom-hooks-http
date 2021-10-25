@@ -9,6 +9,7 @@ const NewTask = (props) => {
 	const enterTaskHandler = async (taskText) => {
 		setIsLoading(true);
 		setError(null);
+
 		try {
 			const response = await fetch('https://task-tracker-15-http-default-rtdb.firebaseio.com/tasks.json',{
 				method: 'POST',
@@ -27,6 +28,7 @@ const NewTask = (props) => {
 			const createdTask = {id: generateId, text: taskText};
 
 			props.onAddTask(createdTask);
+			
 		} catch (err) {
 			setError(err.message || 'Something went wrong');
 		}
